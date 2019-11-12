@@ -37,4 +37,8 @@ ps aux
 
 echo "#### Download and Run LinEnum.sh ####\n"
 wget $1/LinEnum.sh
-bash LinEnum.sh
+bash LinEnum.sh -r report.txt
+
+echo "#### Downloading psspy ####\n"
+wget $1/psspy
+

@@ -23,7 +23,7 @@ grep -iRl password /opt/*
 echo "#### Check /opt ####\n"
 ls -la /opt
 
-echo "#### Any wp-config files? ####\n"
+echo "#### Any wp-config.php files? ####\n"
 find / -name wp-config.php 2>/dev/null
 
 if [ -z "$2" ]

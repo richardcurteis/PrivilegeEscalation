@@ -8,6 +8,8 @@
 
 ```grep -iRl password /opt/*```
 
+```ls -la /opt```
+
 ?? or ??
 
 ```find / -perm -4000 -exec ls -l {} \;```

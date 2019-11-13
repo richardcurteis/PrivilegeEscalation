@@ -3,6 +3,7 @@
 if [ -z "$1" ]
   then
     echo "Host Required"
+    exit
 fi
 
 echo "#### Backdoor Install Attempt ####\n"

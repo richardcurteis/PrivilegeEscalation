@@ -5,13 +5,32 @@ usage()
 		echo "USAGE:"
 		echo "-i	Attacker IP/Host"
 		echo "-u	Local User to Check"
-		echo "-n 	Specify Path To Local wget/curl binary"	
+		echo "-d 	Specify Path To Local wget/curl downloader"	
 }
+
+setdload()
+{
+command -v curl >/dev/null 2>&1
+if [ $? -eq 0 ]; then
+	echo "\n[*] Curl Found. Continuing.\n"
+	dload="curl"
+else
+	command -v wget >/dev/null 2>&1
+	if [ $? -eq 0 ]; then
+		echo "\n[*] OK. wget found. Continuingd.\n"
+		dload="wget"
+	else
+		echo "\n [!] Neither curl nor wget found. Skipping downloads\n"
+		echo "\n [!] Specify with '-n' \n"
+		dload="null"
+	fi
+fi
+}	
 
 prep()
 {
 	# Check first argument is supplied. Should be hostname/IP address
-	if [ -z "$1" ]
+	if [ -z "$ip" ]
 	then
 		echo "Host Required"
 		exit
@@ -29,20 +48,8 @@ prep()
 	cd $dir/recon
 	
 	# curl or wget?
-	command -v curl >/dev/null 2>&1
-	if [ $? -eq 0 ]; then
-		echo "\n[*] Curl Found. Continuing.\n"
-		dload="curl"
-	else
-		command -v wget >/dev/null 2>&1
-		if [ $? -eq 0 ]; then
-			echo "\n[*] OK. wget found. Continuingd.\n"
-			dload="wget"
-		else
-			echo "\n [!] Neither curl nor wget found. Skipping downloads\n"
-			echo "\n [!] Specify with '-n' \n"
-			dload="null"
-		fi
+	if [ -z "$dload" ] ; then
+		setdload
 	fi
 	
 	# python2 or 3?
@@ -84,9 +91,8 @@ quick_enum()
 	echo "\n#### Any wp-config.php files? ####\n"
 	find / -name wp-config.php 2>/dev/null
 	
-	if [ -z "$2" ]
-	then
-		echo "\n#### Files Owned by User: $2 ####\n"
+	if [ "$user" ] ; then
+		echo "\n#### Files Owned by User: $user ####\n"
 		find / -user $2 2>/dev/null
 	fi
 	
@@ -154,11 +160,11 @@ run()
 }
 
 # Get user arguments
-while getopts "h:i:u:n" option; do
+while getopts "h:i:u:d" option; do
  case "${option}" in
-    i) keyword=${OPTARG};;
-    u) export=${OPTARG};;
-    n) export=${OPTARG};;
+    i) ip=${OPTARG};;
+    u) user=${OPTARG};;
+    d) dload=${OPTARG};;
     h) usage; exit;;
     *) usage; exit;;
  esac

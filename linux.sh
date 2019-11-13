@@ -95,6 +95,17 @@ quick_enum()
 		find / -user $2 2>/dev/null
 	fi
 	
+	# Path and permissions
+	pathinfo=`echo $PATH 2>/dev/null
+	if [ "$pathinfo" ]; then
+		pathswriteable=ls -ld `echo $PATH | tr ":" " "`
+		echo -e "\n### Path information ###\n" 
+		echo -e $pathinfo
+		echo -e "\n"
+		echo -e "$pathswriteable"
+		echo -e "\n"
+	fi
+	
 	echo -e "\n#### Processes ####\n"
 	ps aux
 }

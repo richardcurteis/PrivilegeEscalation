@@ -16,6 +16,11 @@ prep()
 	
 	mkdir $dir/recon
 	cd $dir/recon
+	
+	# curl or wget?
+	# python2 or 3?
+	#command -v foo >/dev/null 2>&1 || { echo "I require foo but it's not installed.  Aborting." >&2; exit 1; }
+	#https://www.cyberciti.biz/faq/unix-linux-shell-find-out-posixcommand-exists-or-not/
 }
 
 # Install PHP backdoor in web root

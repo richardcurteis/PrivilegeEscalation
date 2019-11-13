@@ -2,10 +2,10 @@
 
 usage() 
 { 
-		echo -e "USAGE:"
-		echo -e "-i	Attacker IP/Host"
-		echo -e "-u	Local User to Check"
-		echo -e "-d 	Specify Path To Local wget/curl downloader"	
+		echo "USAGE:"
+		echo "-i	Attacker IP/Host"
+		echo "-u	Local User to Check"
+		echo "-d 	Specify Path To Local wget/curl downloader"	
 }
 
 setdload()
@@ -31,7 +31,7 @@ prep()
 {
 	# Check first argument is supplied. Should be hostname/IP address
 	if [ -z "$ip" ] ; then
-		echo -e "Host Required"
+		echo "Host Required. Exiting."
 		exit
 	fi
 	

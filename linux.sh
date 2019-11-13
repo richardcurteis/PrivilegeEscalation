@@ -31,7 +31,7 @@ persist()
 }
 
 # Run quick enum commands
-commands()
+quick_enum()
 {
 	echo "\n#### Sudoers ####\n"
 	sudo -l
@@ -103,8 +103,8 @@ run()
 {
 	prep
 	persist
-	commands
-	downloads
+	quick_enum
+	download
 	execute
 	exfiltrate
 }

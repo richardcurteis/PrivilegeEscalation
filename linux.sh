@@ -93,11 +93,11 @@ quick_enum()
 	echo -e "\n#### Check /opt ####\n"
 	ls -la /opt
 	
-	echo -e "\n#### Any wp-config.php files? ####\n"
-	find / -name wp-config.php 2>/dev/null
+	echo -e "\n#### Any *config.php files? ####\n"
+	find / -name *config.php 2>/dev/null
 	
-	echo -e "\n#### Any .db files? ####\n"
-	find / -name *.db 2>/dev/null
+	echo -e "\n#### Any *.db* files? ####\n"
+	find / -name *.db* 2>/dev/null
 	
 	if [ "$user" ] ; then
 		echo -e "\n#### Files Owned by User: $user ####\n"

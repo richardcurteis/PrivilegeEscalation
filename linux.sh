@@ -122,25 +122,23 @@ quick_enum()
 # Download enumeration scripts and binaries
 download()
 {
-	if [ $dload -eq "wget" ] ; then
-		echo -e "\n#### Downloading LinEnum.sh ####\n"
-		$dload $1/LinEnum.sh
+		if [ $dload -eq "wget" ] || [ $dload -eq "curl" ]; then
+			scripts = (
+				"LinEnum.sh"
+				"linpeas.sh"
+				"lse.sh"
+				"linux-exploit-suggester.sh"
+				"linuxprivchecker.py"
+				"linux-exploit-suggester.sh"
+				"psspy32"
+			)
 	
-		echo -e "\n#### Downloading psspy32 ####\n"
-		$dload $1/psspy32
-	
-		echo -e "\n#### Downloading linux-priv-checker ####\n"
-		$dload $1/linuxprivchecker.py
-	
-		echo -e "\n#### Downloading linpeas.sh ####\n"
-		$dload $1/linpeas.sh
-	
-		echo -e "\n#### Downloading lse.sh ####\n"
-		$dload $1/lse.sh
-		
-		echo -e "\n#### Downloading linux-exploit-suggester.sh ####\n"
-		$dload $1/linux-exploit-suggester.sh
-	fi
+			for script in "${scripts[@]}"
+			do
+				echo -e "\n#### Downloading $script ####\n"
+				$dload $1/$script
+			done
+		fi
 }
 
 # Execute enum scripts

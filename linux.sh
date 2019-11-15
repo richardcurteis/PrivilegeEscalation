@@ -96,6 +96,9 @@ quick_enum()
 	echo -e "\n#### Any *config.php files? ####\n"
 	find / -name *config.php 2>/dev/null
 	
+	echo -e "\n#### Any *backup* files? ####\n"
+	find / -name *backup* 2>/dev/null
+	
 	echo -e "\n#### Any *.db* files? ####\n"
 	find / -name *.db* 2>/dev/null
 	

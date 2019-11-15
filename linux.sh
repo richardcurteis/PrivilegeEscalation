@@ -19,7 +19,7 @@ if [ $? -eq 0 ]; then
 else
 	command -v wget >/dev/null 2>&1
 	if [ $? -eq 0 ]; then
-		echo -e "\n[*] OK. wget found. Continuingd.\n"
+		echo -e "\n[*] OK. wget found. Continuing.\n"
 		dload="wget"
 	else
 		echo -e "\n [!] Neither curl nor wget found. Skipping downloads\n"

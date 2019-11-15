@@ -7,6 +7,7 @@ usage()
 		echo "-p	Attacker Port"
 		echo "-u	Local User to Check"
 		echo "-d 	Specify Path To Local wget/curl downloader"
+		echo "-q 	Quick Enumeration Commands Only"
 }
 
 setdload()
@@ -30,6 +31,14 @@ fi
 
 prep()
 {
+	# Check if quick enumeration only is specified.
+	# Run and exit if so
+	if [ -n "$q_enum" ] ; then
+		echo -e "\n### Quick Enum Commands Only ###\n"
+		quick_enum
+		exit
+	fi
+	
 	# Check first argument is supplied. Should be hostname/IP address
 	if [ -z "$ip" ] ; then
 		echo "Host Required. Exiting."
@@ -193,6 +202,7 @@ while getopts "h:i:u:d" option; do
     p) port=${OPTARG};;
     u) user=${OPTARG};;
     d) dload=${OPTARG};;
+    q) q_enum=${OPTARG};;
     h) usage; exit;;
     *) usage; exit;;
  esac

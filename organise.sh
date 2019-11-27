@@ -3,10 +3,12 @@
 usage()
 {
 	echo -e "\n#### PrivEsc Setup Script by 3therk1ll ####\n"
+	echo -e "\n#### Run on attacker machine to update repos and copy binaries/files to project folder ####\n"
 	echo "USAGE:"
 	echo "-a	Target Architecture (Required). x86 or x64"
 	echo "-l	Linux Target"
 	echo "-w	Windows Target"
+	echo "-p	Project Folder. Default is current folder"
 }
 
 updateLinRepos()
@@ -32,6 +34,7 @@ updateLinRepos()
 
 linuxSetup()
 {
+	cd $projectFolder
 	mkdir privesc
 	cd privesc
 	cp /opt/LinEnum/LinEnum.sh .
@@ -51,9 +54,9 @@ linuxSetup()
 updateWinRepos()
 {
 	scripts = (
-				"Powersploit"
-				"privilege-escalation-awesome-scripts-suite"
-			)
+			"Powersploit"
+			"privilege-escalation-awesome-scripts-suite"
+		)
 	cd /opt
 	
 	for repo in "${repos[@]}"
@@ -66,6 +69,7 @@ updateWinRepos()
 
 windowsSetup()
 {
+	cd $projectFolder
 	mkdir privesc
 	cd privesc
 	cp /opt/privilege-escalation-awesome-scripts-suite/winPEAS/winPEASbat/winPEAS.bat .
@@ -91,6 +95,17 @@ run()
 		echo -e "\n[!] Must Supply target architecture for target\n"; exit
 	fi
 	
+	if [ -z "$projectFolder" ]; then
+		projectFolder=$(pwd)
+		echo -e "\n[*] No Project Directory Specified. Defaulting to current: $projectFolder\n"
+	fi
+	
+	if [ -d $projectFolder ]; then
+		echo -e "\n[*] Project Directory Specified and OK: $projectFolder\n" 
+	else
+		echo -e "\n[*] Inavalid Directory: $projectFolder\n"; exit
+	fi
+	
 	if [ "$os" -eq "windows" ]; then
 		updateWinRepos
 		windowsSetup
@@ -100,13 +115,14 @@ run()
 	fi
 }
 
-while getopts "a:l:w:h" option; do
+while getopts "a:l:w:p:h" option; do
  case "${option}" in
-    a) arch=${OPTARG};;
-	  l) linux=${OPTARG};;
-	  w) windows=${OPTARG};;
-    h) usage; exit;;
-    *) usage; exit;;
+    	a) arch=${OPTARG};;
+	l) linux=${OPTARG};;
+	w) windows=${OPTARG};;
+	p) projectFolder=${OPTARG};;
+    	h) usage; exit;;
+    	*) usage; exit;;
  esac
 done
 

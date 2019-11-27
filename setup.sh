@@ -26,7 +26,7 @@ updateLinRepos()
 	
 	for repo in "${repos[@]}"
 	do
-		cd $repo 
+		cd /opt/$repo 
 		git pull
 		cd /opt
 	done
@@ -61,7 +61,7 @@ updateWinRepos()
 	
 	for repo in "${repos[@]}"
 	do
-		cd $repo
+		cd /opt/$repo
 		git pull
 		cd /opt
 	done

@@ -106,7 +106,7 @@ run()
 		echo -e "\n[*] Inavalid Directory: $projectFolder\n"; exit
 	fi
 	
-	if [ "$os" -eq "windows" ]; then
+	if [ ! -z "$windows" ]; then
 		updateWinRepos
 		windowsSetup
 	else
